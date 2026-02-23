@@ -1,4 +1,4 @@
-# Image-Steganography-Tool-CyberSecurity-Project
+# Image-Steganography-Tool
 
 A lightweight, purely logical Python tool for hiding and extracting text within the binary data of image files. 
 
