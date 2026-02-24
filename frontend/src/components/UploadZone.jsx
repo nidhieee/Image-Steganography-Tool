@@ -76,13 +76,13 @@ export default function UploadZone({ accept, label, onFile, file, accentColor = 
             </span>
             <span style={{
               fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '0.65rem', color: '#444',
+              fontSize: '0.65rem', color: '#8b8b8b',
             }}>
               {(file.size / 1024).toFixed(1)} KB
             </span>
           </div>
           <button onClick={(e) => { e.stopPropagation(); onFile(null) }}
-            style={{ background: 'none', border: 'none', color: '#444', cursor: 'pointer', display: 'flex' }}>
+            style={{ background: 'none', border: 'none', color: '#8b8b8b', cursor: 'pointer', display: 'flex' }}>
             <X size={14} />
           </button>
         </div>

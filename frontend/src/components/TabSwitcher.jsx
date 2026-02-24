@@ -6,7 +6,7 @@ export default function TabSwitcher({ active, onChange, accentColor = '#00ff87' 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
       <span style={{
         fontFamily: "'JetBrains Mono', monospace",
-        fontSize: '0.65rem', color: '#444',
+        fontSize: '0.65rem', color: '#8b8b8b',
         letterSpacing: '0.12em', textTransform: 'uppercase',
       }}>
         Operation Mode

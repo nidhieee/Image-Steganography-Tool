@@ -43,7 +43,7 @@ export default function OutputPanel({ output, type = 'text', loading = false, ac
           {output && type === 'text' && (
             <button onClick={handleCopy} style={{
               background: 'none', border: '1px solid #1e1e1e', borderRadius: '4px',
-              color: copied ? accentColor : '#444', padding: '3px 10px', cursor: 'pointer',
+              color: copied ? accentColor : '#8b8b8b', padding: '3px 10px', cursor: 'pointer',
               fontFamily: "'JetBrains Mono', monospace", fontSize: '0.68rem',
               display: 'flex', alignItems: 'center', gap: '5px', transition: 'all 0.2s',
             }}>
@@ -54,7 +54,7 @@ export default function OutputPanel({ output, type = 'text', loading = false, ac
           {output && type !== 'text' && (
             <button style={{
               background: 'none', border: '1px solid #1e1e1e', borderRadius: '4px',
-              color: '#444', padding: '3px 10px', cursor: 'pointer',
+              color: '#8b8b8b', padding: '3px 10px', cursor: 'pointer',
               fontFamily: "'JetBrains Mono', monospace", fontSize: '0.68rem',
               display: 'flex', alignItems: 'center', gap: '5px',
             }}>

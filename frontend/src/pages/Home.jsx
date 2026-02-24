@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { FileText, Image, Layers, Film, ArrowRight, Lock, Cpu, Shield } from 'lucide-react'
-import LetterGlitch from '../components/LetterGlitch'
+import DotGrid from '../components/DotGrid'
 
 const modules = [
   {
@@ -12,13 +12,13 @@ const modules = [
   },
   {
     id: '02', label: 'Text in Image',
-    desc: 'Embed hidden text into image pixel data using LSB steganography. Output is visually identical.',
+    desc: 'Embed hidden text into image pixel data using LSB steganography. Output is visually identical to the original.',
     path: '/text-to-image', icon: Image, accent: '#00d4ff',
     tags: ['LSB Encoding', 'PNG / BMP'],
   },
   {
     id: '03', label: 'Image in Image',
-    desc: 'Conceal a full secret image inside a carrier image by blending across bit planes.',
+    desc: 'Conceal a full secret image inside a carrier image by blending across bit planes. Zero visual difference.',
     path: '/image-to-image', icon: Layers, accent: '#ff3cac',
     tags: ['Pixel Blending', 'Bit-plane'],
   },
@@ -31,216 +31,234 @@ const modules = [
 ]
 
 export default function Home() {
+  const heroRef = useRef(null)
+  const bgRef = useRef(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!heroRef.current || !bgRef.current) return
+      const heroH = heroRef.current.offsetHeight
+      const opacity = Math.max(0, 1 - (window.scrollY / (heroH * 0.55)))
+      bgRef.current.style.opacity = opacity
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <div>
-      {/* HERO */}
-      <div style={{
-        position: 'relative',
-        minHeight: 'calc(100vh - 64px)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        overflow: 'hidden',
-      }}>
-        <LetterGlitch opacity={0.09} speed={70} />
+      {/* ══ HERO — exactly 100vh minus navbar ══ */}
+      <div
+        ref={heroRef}
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: 'calc(100vh - 80px)',   /* fixed height = full viewport */
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          textAlign: 'center',
+        }}
+      >
+        {/* DotGrid background */}
+        <div ref={bgRef} style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+          <DotGrid
+            dotSize={3}
+            gap={28}
+            baseColor="#1f382a"
+            activeColor="#00ff87"
+            proximity={230}
+          />
+        </div>
 
         {/* Vignette */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 80% 80% at center, transparent 20%, #080808 75%)',
+          background: 'radial-gradient(ellipse 90% 80% at 50% 50%, transparent 25%, rgba(8,8,8,0.95) 100%)',
         }} />
 
-        {/* Hero content */}
+        {/* All hero content in one flex column, gap controlled tightly */}
         <div style={{
           position: 'relative', zIndex: 2,
-          maxWidth: '1400px', margin: '0 auto',
-          padding: '0 2rem', width: '100%',
-          display: 'grid', gridTemplateColumns: '1fr 1fr',
-          gap: '4rem', alignItems: 'center',
-          animation: 'fadeUp 0.6s ease both',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center',
+          gap: 'clamp(1rem, 2vh, 1.8rem)',
+          padding: '0 4vw',
+          width: '100%',
+          maxWidth: '100%',
+          textAlign: 'center',
+          animation: 'fadeUp 0.7s ease both',
         }}>
-          <div>
-            {/* Status badge */}
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              border: '1px solid #1e1e1e', borderRadius: '100px',
-              padding: '5px 16px', marginBottom: '2.5rem',
-              backgroundColor: 'rgba(15,15,15,0.85)',
-              backdropFilter: 'blur(8px)',
+
+          {/* Heading */}
+          <h1 style={{
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 'clamp(3.5rem, 10vw, 11rem)',
+            letterSpacing: '0.04em',
+            lineHeight: 0.92,
+            margin: 0,
+          }}>
+            <span style={{ color: '#ffffff', display: 'block' }}>CONCEALED IN</span>
+            <span style={{
+              display: 'block',
+              color: 'transparent',
+              WebkitTextStroke: '2px #00ff87',
             }}>
-              <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#00ff87', animation: 'blink 2s infinite' }} />
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', color: '#555', letterSpacing: '0.1em' }}>
-                Steganography Suite — v1.0
-              </span>
-            </div>
+              EVERY PIXEL.
+            </span>
+          </h1>
 
-            {/* Big heading */}
-            <h1 style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 'clamp(5.5rem, 9.5vw, 10rem)',
-              letterSpacing: '0.03em', lineHeight: 0.9,
-              marginBottom: '2rem',
-            }}>
-              HIDDEN<br />
-              <span style={{ color: 'transparent', WebkitTextStroke: '2px #252525' }}>IN PLAIN</span><br />
-              SIGHT.
-            </h1>
+          {/* Tagline */}
+          <p style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: 'clamp(0.9rem, 1.4vw, 1.2rem)',
+            color: '#cccccc',
+            lineHeight: 1.75,
+            maxWidth: '540px',
+            margin: 0,
+          }}>
+            Your secrets hide in plain sight —{' '}
+            <span style={{ color: '#00ff87' }}>encoded in pixels, frames & invisible characters.</span>
+          </p>
 
-            <p style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: '1.15rem', color: '#5a5a5a',
-              lineHeight: 1.85, maxWidth: '440px', marginBottom: '3rem',
-            }}>
-              Conceal encrypted messages within digital media using four steganographic methods. Encrypt and decrypt — zero visible trace.
-            </p>
-
-            {/* Feature badges */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '3rem' }}>
-              {[
-                { icon: Lock,   text: 'Encrypt & Decrypt', color: '#00ff87' },
-                { icon: Shield, text: '4 Stego Methods',   color: '#00d4ff' },
-                { icon: Cpu,    text: 'Python Backend',    color: '#ff3cac' },
-              ].map(item => (
-                <div key={item.text} style={{
-                  display: 'flex', alignItems: 'center', gap: '7px',
-                  border: '1px solid #1a1a1a', borderRadius: '4px',
-                  padding: '8px 14px', backgroundColor: 'rgba(12,12,12,0.8)',
-                  backdropFilter: 'blur(4px)',
-                }}>
-                  <item.icon size={13} color={item.color} strokeWidth={1.5} />
-                  <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.83rem', color: '#4a4a4a' }}>
-                    {item.text}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <Link to="/text-to-text" style={{ textDecoration: 'none' }}>
-              <button
-                style={{
-                  backgroundColor: '#00ff87', border: 'none', borderRadius: '6px',
-                  color: '#080808', fontFamily: "'Space Grotesk', sans-serif",
-                  fontWeight: 700, fontSize: '1rem', padding: '15px 38px',
-                  cursor: 'pointer', letterSpacing: '0.02em', transition: 'opacity 0.2s',
-                }}
-                onMouseEnter={e => e.target.style.opacity = '0.85'}
-                onMouseLeave={e => e.target.style.opacity = '1'}
-              >
-                Start Hiding Data →
-              </button>
-            </Link>
-          </div>
-
-          {/* Stats panel */}
+          {/* Feature chips */}
           <div style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr',
-            gap: '1px', backgroundColor: '#141414',
-            border: '1px solid #141414',
-            backdropFilter: 'blur(16px)',
+            display: 'flex', flexWrap: 'wrap', gap: '10px',
+            justifyContent: 'center',
           }}>
             {[
-              { val: '4',   label: 'Stego Methods',    accent: '#00ff87' },
-              { val: '2',   label: 'Ops per Method',   accent: '#00d4ff' },
-              { val: 'LSB', label: 'Core Algorithm',   accent: '#ff3cac' },
-              { val: '0px', label: 'Visual Diff',      accent: '#ffc740' },
-            ].map(stat => (
-              <div key={stat.label} style={{
-                backgroundColor: 'rgba(10,10,10,0.92)',
-                padding: '2.2rem',
-                display: 'flex', flexDirection: 'column', gap: '10px',
+              { icon: Lock,   text: 'Encrypt & Decrypt', color: '#ff3cac'  },
+              { icon: Shield, text: '4 Stego Methods',   color: '#00d4ff' },
+            ].map(item => (
+              <div key={item.text} style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                border: '1px solid #222', borderRadius: '6px',
+                padding: '8px 16px',
+                backgroundColor: 'rgba(8,8,8,0.8)',
+                backdropFilter: 'blur(6px)',
               }}>
+                <item.icon size={14} color={item.color} strokeWidth={1.5} />
                 <span style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: '3.8rem', color: stat.accent,
-                  letterSpacing: '0.04em', lineHeight: 1,
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontSize: 'clamp(0.82rem, 1vw, 1rem)',
+                  color: '#ccc',
                 }}>
-                  {stat.val}
-                </span>
-                <span style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '0.68rem', color: '#2e2e2e',
-                  letterSpacing: '0.12em', textTransform: 'uppercase',
-                }}>
-                  {stat.label}
+                  {item.text}
                 </span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Scroll hint */}
+        {/* CTA button — scrolls to module grid, truly centered */}
         <div style={{
-          position: 'absolute', bottom: '2.5rem', left: '50%',
-          transform: 'translateX(-50%)', zIndex: 2,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+          position: 'absolute', bottom: '2.5rem',
+          left: 0, right: 0,
+          zIndex: 2,
+          display: 'flex', justifyContent: 'center',
+          animation: 'fadeUp 1s ease 0.8s both',
         }}>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem', color: '#222', letterSpacing: '0.2em' }}>
-            SCROLL
-          </span>
-          <div style={{ width: '1px', height: '36px', background: 'linear-gradient(to bottom, #2a2a2a, transparent)', animation: 'blink 2s infinite' }} />
+          <button
+            onClick={() => document.getElementById('modules').scrollIntoView({ behavior: 'smooth' })}
+            style={{
+              backgroundColor: '#00ff87', border: 'none', borderRadius: '6px',
+              color: '#080808', fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 700, fontSize: '1.1rem', padding: '16px 48px',
+              cursor: 'pointer', letterSpacing: '0.02em',
+              transition: 'opacity 0.2s',
+              whiteSpace: 'nowrap',
+            }}
+            onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+          >
+            Explore Modules ↓
+          </button>
         </div>
       </div>
 
-      {/* MODULE GRID */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '5rem 2rem 6rem' }}>
+      {/* ══ MODULE GRID ══ */}
+      <div id="modules" style={{ width: '100%', padding: '5rem 4vw 7rem', backgroundColor: '#080808' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
-          <div style={{ width: '32px', height: '1px', backgroundColor: '#00ff87' }} />
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.7rem', color: '#00ff87', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+          <div style={{ width: '40px', height: '1px', backgroundColor: '#00ff87' }} />
+          <span style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '0.85rem', color: '#00ff87',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+          }}>
             Select Module
           </span>
-          <div style={{ flex: 1, height: '1px', backgroundColor: '#141414' }} />
+          <div style={{ flex: 1, height: '1px', backgroundColor: '#1a1a1a' }} />
         </div>
 
+        {/* Responsive grid: 4 cols on wide, 2 on medium, 1 on small */}
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '1px', backgroundColor: '#141414',
-          border: '1px solid #141414', borderRadius: '8px', overflow: 'hidden',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: '1px', backgroundColor: '#1a1a1a',
+          border: '1px solid #1a1a1a', borderRadius: '8px', overflow: 'hidden',
         }}>
           {modules.map(mod => (
             <Link key={mod.id} to={mod.path} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div
                 style={{
-                  backgroundColor: '#0a0a0a', padding: '2.5rem 2rem',
+                  backgroundColor: '#0c0c0c', padding: '2.5rem 2rem',
                   height: '100%', display: 'flex', flexDirection: 'column', gap: '1.2rem',
                   transition: 'background-color 0.2s', cursor: 'pointer',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.backgroundColor = '#0f0f0f'
+                  e.currentTarget.style.backgroundColor = '#111'
                   e.currentTarget.querySelector('.card-arrow').style.opacity = '1'
-                  e.currentTarget.querySelector('.card-arrow').style.transform = 'translateX(5px)'
+                  e.currentTarget.querySelector('.card-arrow').style.transform = 'translateX(6px)'
                   e.currentTarget.querySelector('.card-line').style.width = '100%'
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.backgroundColor = '#0a0a0a'
+                  e.currentTarget.style.backgroundColor = '#0c0c0c'
                   e.currentTarget.querySelector('.card-arrow').style.opacity = '0.2'
                   e.currentTarget.querySelector('.card-arrow').style.transform = 'translateX(0)'
                   e.currentTarget.querySelector('.card-line').style.width = '0%'
                 }}
               >
-                <div className="card-line" style={{ height: '2px', backgroundColor: mod.accent, width: '0%', transition: 'width 0.3s ease', marginBottom: '4px' }} />
+                <div className="card-line" style={{
+                  height: '2px', backgroundColor: mod.accent,
+                  width: '0%', transition: 'width 0.35s ease',
+                }} />
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.65rem', color: mod.accent, letterSpacing: '0.15em', opacity: 0.5 }}>
+                  <span style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '0.78rem', color: mod.accent, letterSpacing: '0.15em', opacity: 0.7,
+                  }}>
                     {mod.id} ——
                   </span>
-                  <mod.icon size={16} color={mod.accent} strokeWidth={1.5} style={{ opacity: 0.4 }} />
+                  <mod.icon size={20} color={mod.accent} strokeWidth={1.5} style={{ opacity: 0.5 }} />
                 </div>
 
-                <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '2.2rem', letterSpacing: '0.04em', color: '#f0f0f0', lineHeight: 1 }}>
+                <h3 style={{
+                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontSize: 'clamp(1.8rem, 2.5vw, 2.6rem)',
+                  letterSpacing: '0.04em', color: '#ffffff', lineHeight: 1,
+                }}>
                   {mod.label}
                 </h3>
 
-                <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.83rem', color: '#444', lineHeight: 1.7, flex: 1 }}>
+                <p style={{
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontSize: 'clamp(0.88rem, 1vw, 1rem)',
+                  color: '#888', lineHeight: 1.75, flex: 1,
+                }}>
                   {mod.desc}
                 </p>
 
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                   {mod.tags.map(tag => (
                     <span key={tag} style={{
-                      fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem', color: mod.accent,
-                      border: `1px solid ${mod.accent}25`, padding: '2px 8px', borderRadius: '2px',
-                      letterSpacing: '0.06em', opacity: 0.6,
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '0.7rem', color: mod.accent,
+                      border: `1px solid ${mod.accent}30`,
+                      padding: '3px 10px', borderRadius: '2px',
+                      letterSpacing: '0.06em', opacity: 0.8,
                     }}>
                       {tag}
                     </span>
@@ -248,13 +266,21 @@ export default function Home() {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <ArrowRight size={15} color={mod.accent} className="card-arrow" style={{ opacity: 0.2, transition: 'all 0.25s ease' }} />
+                  <ArrowRight size={18} color={mod.accent} className="card-arrow"
+                    style={{ opacity: 0.2, transition: 'all 0.25s ease' }} />
                 </div>
               </div>
             </Link>
           ))}
         </div>
       </div>
+
+      <style>{`
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(8px); }
+        }
+      `}</style>
     </div>
   )
 }

@@ -1,70 +1,115 @@
 import React from 'react'
-import { ShieldCheck, Github, Lock } from 'lucide-react'
+import { ShieldCheck, Lock, Mail, Github } from 'lucide-react'
+import { Link } from 'react-router-dom'
+
+const modules = [
+  { label: 'Text in Text',   path: '/text-to-text',   accent: '#00ff87' },
+  { label: 'Text in Image',  path: '/text-to-image',  accent: '#00d4ff' },
+  { label: 'Image in Image', path: '/image-to-image', accent: '#ff3cac' },
+  { label: 'Text in GIF',    path: '/text-to-gif',    accent: '#ffc740' },
+]
 
 export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
     <footer style={{
-      borderTop: '1px solid #141414',
-      backgroundColor: '#0a0a0a',
-      marginTop: 'auto',
+      borderTop: '1px solid #1e1e1e',
+      backgroundColor: '#060606',
+      width: '100%',
     }}>
+      {/* Main footer content */}
       <div style={{
-        maxWidth: '1400px', margin: '0 auto',
-        padding: '2.5rem 2rem',
+        width: '100%', padding: '4rem 5vw 3rem',
         display: 'grid',
-        gridTemplateColumns: '1fr auto 1fr',
-        alignItems: 'center',
-        gap: '2rem',
+        gridTemplateColumns: '1.5fr 1fr 1fr',
+        gap: '4rem',
       }}>
-        {/* Left */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ShieldCheck size={14} color="#00ff87" strokeWidth={1.5} />
+
+        {/* Brand column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: '34px', height: '34px', border: '1px solid #00ff87',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <ShieldCheck size={16} color="#00ff87" strokeWidth={1.5} />
+            </div>
             <span style={{
               fontFamily: "'Space Grotesk', sans-serif",
-              fontWeight: 700, fontSize: '0.9rem', color: '#f0f0f0',
+              fontWeight: 700, fontSize: '1.2rem', color: '#ffffff',
             }}>
               Stego<span style={{ color: '#00ff87' }}>Vault</span>
             </span>
           </div>
-          <p style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '0.68rem', color: '#333', letterSpacing: '0.05em',
-          }}>
-            // data hidden in plain sight
-          </p>
-        </div>
 
-        {/* Center */}
-        <div style={{ textAlign: 'center' }}>
           <p style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '0.7rem', color: '#2e2e2e', letterSpacing: '0.08em',
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '1rem', color: '#8b8b8b', lineHeight: 1.8, maxWidth: '320px',
           }}>
-            © {year} StegoVault. All rights reserved.
+            A steganography suite for hiding and extracting secret data within digital media — text, images, and GIFs.
           </p>
-          <p style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '0.65rem', color: '#222', marginTop: '4px',
-          }}>
-            Built for academic purposes · NMIMS SEM 6 · CS
-          </p>
-        </div>
 
-        {/* Right */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '12px' }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: '6px',
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '0.68rem', color: '#333',
-          }}>
-            <Lock size={11} color="#333" />
-            Encrypted · Secure · Zero Trace
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '0.5rem' }}>
+            <Lock size={13} color="#00ff87" strokeWidth={1.5} />
+            <span style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: '0.82rem', color: '#8b8b8b', letterSpacing: '0.06em',
+            }}>
+              Encrypted · Secure · Zero Trace
+            </span>
           </div>
         </div>
+
+        {/* Modules column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <h4 style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '0.78rem', color: '#8b8b8b',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            marginBottom: '0.5rem',
+          }}>
+            Modules
+          </h4>
+          {modules.map(mod => (
+            <Link key={mod.path} to={mod.path} style={{ textDecoration: 'none' }}>
+              <span style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: '1rem', color: '#666',
+                transition: 'color 0.2s', display: 'block',
+              }}
+              onMouseEnter={e => e.target.style.color = mod.accent}
+              onMouseLeave={e => e.target.style.color = '#666'}
+              >
+                {mod.label}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Info column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          
+          {[
+            'Academic Use Only',
+          ].map(item => (
+            <span key={item} style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontSize: '1rem', color: '#8b8b8b',
+            }}>
+              {item}
+            </span>
+          ))}
+          <span style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: '0.82rem', color: '#8b8b8b',
+          letterSpacing: '0.06em',
+        }}>
+          © {year} StegoVault. All rights reserved.
+        </span>
+        </div>
       </div>
+
     </footer>
   )
 }

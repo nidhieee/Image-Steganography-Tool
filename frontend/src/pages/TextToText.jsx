@@ -9,7 +9,7 @@ const ACCENT = '#00ff87'
 const label = (text) => (
   <label style={{
     fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '0.65rem', color: '#444',
+    fontSize: '0.65rem', color: '#8b8b8b',
     letterSpacing: '0.12em', textTransform: 'uppercase',
     display: 'block', marginBottom: '8px',
   }}>{text}</label>
@@ -42,7 +42,7 @@ const Tip = ({ text }) => (
     borderRadius: '4px', padding: '10px 14px',
   }}>
     <Info size={12} color={ACCENT} style={{ marginTop: '2px', opacity: 0.5, flexShrink: 0 }} />
-    <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.78rem', color: '#444', lineHeight: 1.6 }}>
+    <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.78rem', color: '#8b8b8b', lineHeight: 1.6 }}>
       {text}
     </p>
   </div>

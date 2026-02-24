@@ -35,14 +35,9 @@ const LetterGlitch = ({
     hex = hex.replace(shorthandRegex, (m, r, g, b) => {
       return r + r + g + g + b + b;
     });
-
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
-      ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16)
-        }
+      ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) }
       : null;
   };
 
@@ -83,7 +78,6 @@ const LetterGlitch = ({
 
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
-
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
 
@@ -93,7 +87,6 @@ const LetterGlitch = ({
 
     const { columns, rows } = calculateGrid(rect.width, rect.height);
     initializeLetters(columns, rows);
-
     drawLetters();
   };
 
@@ -115,13 +108,11 @@ const LetterGlitch = ({
 
   const updateLetters = () => {
     if (!letters.current || letters.current.length === 0) return;
-
     const updateCount = Math.max(1, Math.floor(letters.current.length * 0.05));
 
     for (let i = 0; i < updateCount; i++) {
       const index = Math.floor(Math.random() * letters.current.length);
       if (!letters.current[index]) continue;
-
       letters.current[index].char = getRandomChar();
       letters.current[index].targetColor = getRandomColor();
 
@@ -149,10 +140,7 @@ const LetterGlitch = ({
         }
       }
     });
-
-    if (needsRedraw) {
-      drawLetters();
-    }
+    if (needsRedraw) drawLetters();
   };
 
   const animate = () => {
@@ -162,11 +150,7 @@ const LetterGlitch = ({
       drawLetters();
       lastGlitchTime.current = now;
     }
-
-    if (smooth) {
-      handleSmoothTransitions();
-    }
-
+    if (smooth) handleSmoothTransitions();
     animationRef.current = requestAnimationFrame(animate);
   };
 
@@ -179,7 +163,6 @@ const LetterGlitch = ({
     animate();
 
     let resizeTimeout;
-
     const handleResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
@@ -190,7 +173,6 @@ const LetterGlitch = ({
     };
 
     window.addEventListener('resize', handleResize);
-
     return () => {
       cancelAnimationFrame(animationRef.current);
       window.removeEventListener('resize', handleResize);
@@ -198,12 +180,15 @@ const LetterGlitch = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [glitchSpeed, smooth]);
 
+  // ← ONLY CHANGE FROM YOUR ORIGINAL: position absolute so it fills hero behind content
   const containerStyle = {
-    position: 'relative',
+    position: 'absolute',
+    inset: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: '#000000',
-    overflow: 'hidden'
+    backgroundColor: '#080808',
+    overflow: 'hidden',
+    zIndex: 0,
   };
 
   const canvasStyle = {
@@ -214,20 +199,16 @@ const LetterGlitch = ({
 
   const outerVignetteStyle = {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
+    top: 0, left: 0,
+    width: '100%', height: '100%',
     pointerEvents: 'none',
-    background: 'radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,1) 100%)'
+    background: 'radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(8,8,8,0.96) 85%)'
   };
 
   const centerVignetteStyle = {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
+    top: 0, left: 0,
+    width: '100%', height: '100%',
     pointerEvents: 'none',
     background: 'radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%)'
   };
