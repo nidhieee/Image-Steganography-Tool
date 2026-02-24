@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, Info } from 'lucide-react'
+import { Image } from 'lucide-react'
 import PageLayout from '../components/PageLayout'
 import TabSwitcher from '../components/TabSwitcher'
 import UploadZone from '../components/UploadZone'
@@ -10,24 +10,10 @@ const ACCENT = '#00d4ff'
 const label = (text) => (
   <label style={{
     fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '0.65rem', color: '#8b8b8b',
+    fontSize: '0.82rem', color: '#aaa',
     letterSpacing: '0.12em', textTransform: 'uppercase',
-    display: 'block', marginBottom: '8px',
+    display: 'block', marginBottom: '10px',
   }}>{text}</label>
-)
-
-const Tip = ({ text, color = ACCENT }) => (
-  <div style={{
-    display: 'flex', alignItems: 'flex-start', gap: '8px',
-    backgroundColor: '#0f0f0f', border: '1px solid #1a1a1a',
-    borderLeft: `2px solid ${color}50`,
-    borderRadius: '4px', padding: '10px 14px',
-  }}>
-    <Info size={12} color={color} style={{ marginTop: '2px', opacity: 0.5, flexShrink: 0 }} />
-    <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.78rem', color: '#8b8b8b', lineHeight: 1.6 }}>
-      {text}
-    </p>
-  </div>
 )
 
 export default function TextToImage() {
@@ -59,7 +45,6 @@ export default function TextToImage() {
 
         {mode === 'encrypt' ? (
           <>
-            <Tip text="Encryption: Upload a carrier image (PNG or BMP). Your secret text will be encoded into the image's pixel data using LSB steganography. Download the output image — it looks identical." />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div>
                 {label('Carrier Image (PNG or BMP)')}
@@ -71,9 +56,9 @@ export default function TextToImage() {
                   style={{
                     width: '100%', backgroundColor: '#0f0f0f',
                     border: '1px solid #1e1e1e', borderRadius: '6px',
-                    padding: '14px 16px', color: '#f0f0f0',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: '0.82rem', lineHeight: 1.7,
+                    padding: '16px 18px', color: '#ffffff',
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontSize: '1rem', lineHeight: 1.75,
                     resize: 'vertical', outline: 'none', minHeight: '140px',
                     transition: 'border-color 0.2s',
                   }}
@@ -88,7 +73,6 @@ export default function TextToImage() {
           </>
         ) : (
           <>
-            <Tip text="Decryption: Upload the stego image (the image with hidden text). The tool will extract the LSB data from pixels and reconstruct the hidden text message." />
             <div style={{ maxWidth: '500px' }}>
               {label('Stego Image (image containing hidden text)')}
               <UploadZone accept=".png,.bmp" label="stego image" onFile={setStegoImg} file={stegoImg} accentColor={ACCENT} />
@@ -97,13 +81,13 @@ export default function TextToImage() {
               backgroundColor: '#0f0f0f', border: '1px solid #1a1a1a',
               borderRadius: '6px', padding: '1rem 1.5rem',
               fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '0.72rem', color: '#333', lineHeight: 1.8,
+              fontSize: '0.82rem', color: '#aaa', lineHeight: 1.8,
             }}>
               <p>// What happens:</p>
-              <p style={{ color: '#2a2a2a' }}>1. Read each pixel's RGB values</p>
-              <p style={{ color: '#2a2a2a' }}>2. Extract least significant bits</p>
-              <p style={{ color: '#2a2a2a' }}>3. Reassemble bits into bytes → ASCII text</p>
-              <p style={{ color: '#2a2a2a' }}>4. Output the hidden message</p>
+              <p>1. Read each pixel's RGB values</p>
+              <p>2. Extract least significant bits</p>
+              <p>3. Reassemble bits into bytes → ASCII text</p>
+              <p>4. Output the hidden message</p>
             </div>
           </>
         )}

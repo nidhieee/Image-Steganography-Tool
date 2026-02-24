@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Film, Info, ChevronDown } from 'lucide-react'
+import { Film, ChevronDown } from 'lucide-react'
 import PageLayout from '../components/PageLayout'
 import TabSwitcher from '../components/TabSwitcher'
 import UploadZone from '../components/UploadZone'
@@ -10,24 +10,10 @@ const ACCENT = '#ffc740'
 const label = (text) => (
   <label style={{
     fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '0.65rem', color: '#8b8b8b',
+    fontSize: '0.82rem', color: '#aaa',
     letterSpacing: '0.12em', textTransform: 'uppercase',
-    display: 'block', marginBottom: '8px',
+    display: 'block', marginBottom: '10px',
   }}>{text}</label>
-)
-
-const Tip = ({ text }) => (
-  <div style={{
-    display: 'flex', alignItems: 'flex-start', gap: '8px',
-    backgroundColor: '#0f0f0f', border: '1px solid #1a1a1a',
-    borderLeft: `2px solid ${ACCENT}50`,
-    borderRadius: '4px', padding: '10px 14px',
-  }}>
-    <Info size={12} color={ACCENT} style={{ marginTop: '2px', opacity: 0.5, flexShrink: 0 }} />
-    <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.78rem', color: '#8b8b8b', lineHeight: 1.6 }}>
-      {text}
-    </p>
-  </div>
 )
 
 const methods = [
@@ -68,7 +54,6 @@ export default function TextToGif() {
 
         {mode === 'encrypt' ? (
           <>
-            <Tip text="Encryption: Your text is encoded across the GIF's animation frames. The GIF continues to play normally — the hidden data is invisible to viewers." />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div>
@@ -84,20 +69,20 @@ export default function TextToGif() {
                       style={{
                         width: '100%', backgroundColor: '#0f0f0f',
                         border: '1px solid #1e1e1e', borderRadius: '6px',
-                        padding: '10px 40px 10px 14px', color: '#f0f0f0',
-                        fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.85rem',
+                        padding: '10px 40px 10px 14px', color: '#ffffff',
+                        fontFamily: "'Space Grotesk', sans-serif", fontSize: '1rem',
                         outline: 'none', cursor: 'pointer', appearance: 'none',
                         transition: 'border-color 0.2s',
                       }}
                     >
                       {methods.map(m => <option key={m.id} value={m.id}>{m.label}</option>)}
                     </select>
-                    <ChevronDown size={14} color="#8b8b8b" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                    <ChevronDown size={14} color="#aaa" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
                   </div>
                   {selectedMethod && (
                     <p style={{
                       fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: '0.65rem', color: '#333', marginTop: '6px',
+                      fontSize: '0.75rem', color: '#888', marginTop: '6px',
                     }}>
                       // {selectedMethod.desc}
                     </p>
@@ -110,9 +95,9 @@ export default function TextToGif() {
                   style={{
                     width: '100%', backgroundColor: '#0f0f0f',
                     border: '1px solid #1e1e1e', borderRadius: '6px',
-                    padding: '14px 16px', color: '#f0f0f0',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: '0.82rem', lineHeight: 1.7,
+                    padding: '16px 18px', color: '#ffffff',
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontSize: '1rem', lineHeight: 1.75,
                     resize: 'vertical', outline: 'none', minHeight: '160px',
                     transition: 'border-color 0.2s',
                   }}
@@ -127,7 +112,6 @@ export default function TextToGif() {
           </>
         ) : (
           <>
-            <Tip text="Decryption: Upload the stego GIF. The tool will analyze frame differences or palette ordering to extract the hidden message encoded across frames." />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div>
                 {label('Stego GIF (GIF containing hidden message)')}
@@ -142,16 +126,16 @@ export default function TextToGif() {
                     style={{
                       width: '100%', backgroundColor: '#0f0f0f',
                       border: '1px solid #1e1e1e', borderRadius: '6px',
-                      padding: '10px 40px 10px 14px', color: '#f0f0f0',
-                      fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.85rem',
+                      padding: '10px 40px 10px 14px', color: '#ffffff',
+                      fontFamily: "'Space Grotesk', sans-serif", fontSize: '1rem',
                       outline: 'none', cursor: 'pointer', appearance: 'none',
                     }}
                   >
                     {methods.map(m => <option key={m.id} value={m.id}>{m.label}</option>)}
                   </select>
-                  <ChevronDown size={14} color="#8b8b8b" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                  <ChevronDown size={14} color="#aaa" style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
                 </div>
-                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.65rem', color: '#333', marginTop: '6px' }}>
+                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.75rem', color: '#888', marginTop: '6px' }}>
                   // Must match the method used to encode
                 </p>
                 <div style={{
@@ -159,13 +143,13 @@ export default function TextToGif() {
                   backgroundColor: '#0f0f0f', border: '1px solid #1a1a1a',
                   borderRadius: '6px', padding: '1rem 1.2rem',
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '0.65rem', color: '#333', lineHeight: 1.9,
+                  fontSize: '0.82rem', color: '#aaa', lineHeight: 1.9,
                 }}>
                   <p>// Decoding steps:</p>
-                  <p style={{ color: '#2a2a2a' }}>1. Parse all GIF frames</p>
-                  <p style={{ color: '#2a2a2a' }}>2. Analyze using selected method</p>
-                  <p style={{ color: '#2a2a2a' }}>3. Extract and reconstruct bits</p>
-                  <p style={{ color: '#2a2a2a' }}>4. Output hidden text</p>
+                  <p>1. Parse all GIF frames</p>
+                  <p>2. Analyze using selected method</p>
+                  <p>3. Extract and reconstruct bits</p>
+                  <p>4. Output hidden text</p>
                 </div>
               </div>
             </div>

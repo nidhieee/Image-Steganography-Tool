@@ -9,9 +9,9 @@ const ACCENT = '#00ff87'
 const label = (text) => (
   <label style={{
     fontFamily: "'JetBrains Mono', monospace",
-    fontSize: '0.65rem', color: '#8b8b8b',
+    fontSize: '0.82rem', color: '#aaa',
     letterSpacing: '0.12em', textTransform: 'uppercase',
-    display: 'block', marginBottom: '8px',
+    display: 'block', marginBottom: '10px',
   }}>{text}</label>
 )
 
@@ -21,9 +21,9 @@ const textarea = (props) => (
     style={{
       width: '100%', backgroundColor: '#0f0f0f',
       border: '1px solid #1e1e1e', borderRadius: '6px',
-      padding: '14px 16px', color: '#f0f0f0',
-      fontFamily: "'JetBrains Mono', monospace",
-      fontSize: '0.82rem', lineHeight: 1.7,
+      padding: '16px 18px', color: '#ffffff',
+      fontFamily: "'Space Grotesk', sans-serif",
+      fontSize: '1rem', lineHeight: 1.75,
       resize: 'vertical', outline: 'none',
       minHeight: props.tall ? '160px' : '120px',
       transition: 'border-color 0.2s',
@@ -42,7 +42,7 @@ const Tip = ({ text }) => (
     borderRadius: '4px', padding: '10px 14px',
   }}>
     <Info size={12} color={ACCENT} style={{ marginTop: '2px', opacity: 0.5, flexShrink: 0 }} />
-    <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.78rem', color: '#8b8b8b', lineHeight: 1.6 }}>
+    <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.78rem', color: '#444', lineHeight: 1.6 }}>
       {text}
     </p>
   </div>
@@ -80,10 +80,9 @@ export default function TextToText() {
 
         {mode === 'encrypt' ? (
           <>
-            <Tip text="Encryption: Your secret message will be hidden inside the cover text using invisible zero-width characters. The output looks identical to the original text." />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div>
-                {label('Cover Text (public-facing)')}
+                {label('Your Text (public-facing)')}
                 {textarea({ placeholder: 'Enter the innocent-looking text that will carry the hidden message...', value: coverText, onChange: e => setCoverText(e.target.value), tall: true })}
               </div>
               <div>
@@ -94,7 +93,6 @@ export default function TextToText() {
           </>
         ) : (
           <>
-            <Tip text="Decryption: Paste any stego text (text that may contain hidden data). The tool will scan for zero-width characters and extract the concealed message." />
             <div>
               {label('Stego Text (paste text to decode)')}
               {textarea({ placeholder: 'Paste the text that may contain a hidden message. The tool will scan for invisible zero-width characters...', value: stegoInput, onChange: e => setStegoInput(e.target.value), tall: true, style: { minHeight: '180px' } })}

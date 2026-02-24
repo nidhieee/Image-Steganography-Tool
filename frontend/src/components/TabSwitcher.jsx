@@ -6,7 +6,7 @@ export default function TabSwitcher({ active, onChange, accentColor = '#00ff87' 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
       <span style={{
         fontFamily: "'JetBrains Mono', monospace",
-        fontSize: '0.65rem', color: '#8b8b8b',
+        fontSize: '1rem', color: '#ffffff',
         letterSpacing: '0.12em', textTransform: 'uppercase',
       }}>
         Operation Mode
@@ -27,7 +27,7 @@ export default function TabSwitcher({ active, onChange, accentColor = '#00ff87' 
                 border: 'none', outline: 'none', cursor: 'pointer',
                 transition: 'all 0.2s',
                 backgroundColor: isActive ? accentColor : '#0f0f0f',
-                color: isActive ? '#080808' : '#555',
+                color: isActive ? '#080808' : '#b7b7b7',
                 fontFamily: "'Space Grotesk', sans-serif",
                 fontWeight: isActive ? 600 : 400,
                 fontSize: '0.85rem',

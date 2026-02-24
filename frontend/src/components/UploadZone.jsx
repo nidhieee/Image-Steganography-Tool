@@ -35,7 +35,7 @@ export default function UploadZone({ accept, label, onFile, file, accentColor = 
           backgroundColor: dragging ? `${accentColor}08` : '#0f0f0f',
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px',
         }}
-        onMouseEnter={e => { if (!file) e.currentTarget.style.borderColor = '#333' }}
+        onMouseEnter={e => { if (!file) e.currentTarget.style.borderColor = '#ffffff' }}
         onMouseLeave={e => { if (!file) e.currentTarget.style.borderColor = '#222' }}
       >
         <UploadCloud size={24} color={dragging ? accentColor : '#2a2a2a'} strokeWidth={1.5} />

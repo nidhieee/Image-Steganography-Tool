@@ -34,7 +34,7 @@ export default function OutputPanel({ output, type = 'text', loading = false, ac
           </div>
           <span style={{
             fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '0.68rem', color: '#333', letterSpacing: '0.1em',
+            fontSize: '0.68rem', color: '#ffffff', letterSpacing: '0.1em',
           }}>
             OUTPUT — {type.toUpperCase()}
           </span>
@@ -43,7 +43,7 @@ export default function OutputPanel({ output, type = 'text', loading = false, ac
           {output && type === 'text' && (
             <button onClick={handleCopy} style={{
               background: 'none', border: '1px solid #1e1e1e', borderRadius: '4px',
-              color: copied ? accentColor : '#8b8b8b', padding: '3px 10px', cursor: 'pointer',
+              color: copied ? accentColor : '#ffffff', padding: '3px 10px', cursor: 'pointer',
               fontFamily: "'JetBrains Mono', monospace", fontSize: '0.68rem',
               display: 'flex', alignItems: 'center', gap: '5px', transition: 'all 0.2s',
             }}>
@@ -54,7 +54,7 @@ export default function OutputPanel({ output, type = 'text', loading = false, ac
           {output && type !== 'text' && (
             <button style={{
               background: 'none', border: '1px solid #1e1e1e', borderRadius: '4px',
-              color: '#8b8b8b', padding: '3px 10px', cursor: 'pointer',
+              color: '#ffffff', padding: '3px 10px', cursor: 'pointer',
               fontFamily: "'JetBrains Mono', monospace", fontSize: '0.68rem',
               display: 'flex', alignItems: 'center', gap: '5px',
             }}>
@@ -77,7 +77,7 @@ export default function OutputPanel({ output, type = 'text', loading = false, ac
             <Sparkles size={20} color={accentColor} style={{ opacity: 0.5, animation: 'blink 1s infinite' }} />
             <span style={{
               fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '0.75rem', color: '#333', letterSpacing: '0.08em',
+              fontSize: '0.75rem', color: '#ffffff', letterSpacing: '0.08em',
             }}>
               processing...
             </span>
