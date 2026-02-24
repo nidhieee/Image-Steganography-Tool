@@ -65,7 +65,7 @@ export default function Home() {
         {/* DotGrid background */}
         <div ref={bgRef} style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <DotGrid
-            dotSize={3}
+            dotSize={5}
             gap={28}
             baseColor="#1f382a"
             activeColor="#00ff87"
