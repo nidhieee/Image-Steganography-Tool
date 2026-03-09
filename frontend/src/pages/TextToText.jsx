@@ -56,15 +56,39 @@ export default function TextToText() {
   const [output, setOutput] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleRun = () => {
-    setLoading(true); setOutput('')
-    setTimeout(() => {
-      setOutput(mode === 'encrypt'
-        ? '// Encoded output will appear here once Python API is connected'
-        : '// Decoded secret message will appear here once Python API is connected'
-      )
-      setLoading(false)
-    }, 1300)
+  // --- UPDATED API INTEGRATION ---
+  const handleRun = async () => {
+    setLoading(true); 
+    setOutput('');
+
+    try {
+      if (mode === 'encrypt') {
+        // Changed localhost to 127.0.0.1
+        const response = await fetch('http://127.0.0.1:5000/api/encode', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cover_text: coverText, secret_message: secretMsg })
+        });
+        
+        const data = await response.json();
+        setOutput(data.encoded_text || 'Error: Could not encode text.');
+      } else {
+        // Changed localhost to 127.0.0.1
+        const response = await fetch('http://127.0.0.1:5000/api/decode', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ encoded_text: stegoInput })
+        });
+        
+        const data = await response.json();
+        setOutput(data.decoded_message || 'Error: Could not decode text.');
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      setOutput("// Error: Could not connect to Python backend. Make sure your Flask server is running on port 5000.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -114,9 +138,7 @@ export default function TextToText() {
           >
             {mode === 'encrypt' ? 'Encode Message →' : 'Extract Secret →'}
           </button>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.68rem', color: '#2a2a2a' }}>
-            // Python API integration pending
-          </span>
+          
         </div>
 
         <OutputPanel output={output} type="text" loading={loading} accentColor={ACCENT} />
