@@ -5,18 +5,16 @@ app = Flask(__name__)
 # Enable CORS so your React frontend (localhost:5173) can communicate with this API
 CORS(app) 
 
+
 def encode_text(cover_text, secret_message):
     if not cover_text: return "Cover text required"
-    if not secret_message: return cover_text # Nothing to hide
+    if not secret_message: return cover_text 
     
     binary_message = ''.join(format(ord(char), '08b') for char in secret_message)
-    
-    # Use Zero-Width Space (\u200B) for 0, Zero-Width Non-Joiner (\u200C) for 1
     hidden_payload = ""
     for bit in binary_message:
         hidden_payload += '\u200B' if bit == '0' else '\u200C'
             
-    # Insert payload after first character
     return cover_text[:1] + hidden_payload + cover_text[1:]
 
 def decode_text(encoded_text):
@@ -32,7 +30,6 @@ def decode_text(encoded_text):
     all_bytes = [binary_message[i: i+8] for i in range(0, len(binary_message), 8)]
     decoded_message = ""
     for byte in all_bytes:
-        # Prevent errors if the binary string isn't a perfect multiple of 8
         if len(byte) == 8: 
             decoded_message += chr(int(byte, 2))
             
