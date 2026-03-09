@@ -41,7 +41,7 @@ export default function Navbar() {
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
             width: '38px', height: '38px',
-            border: '1px solid #00ff87',
+            border: '1px solid #ffffff',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
             <ShieldCheck size={20} color="#00ff87" strokeWidth={1.5} />
@@ -51,7 +51,7 @@ export default function Navbar() {
             fontWeight: 700, fontSize: '1.35rem',
             color: '#ffffff', letterSpacing: '-0.02em',
           }}>
-            Stego<span style={{ color: '#00ff87' }}>Vault</span>
+            <span style={{ color: '#00ff87' }}>Cryptix</span>
           </span>
         </Link>
 

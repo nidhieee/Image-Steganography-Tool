@@ -105,7 +105,7 @@ export default function Footer() {
           fontSize: '0.82rem', color: '#8b8b8b',
           letterSpacing: '0.06em',
         }}>
-          © {year} StegoVault. All rights reserved.
+          © {year} Cryptix. All rights reserved.
         </span>
         </div>
       </div>
