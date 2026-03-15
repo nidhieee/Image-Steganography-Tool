@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { Layers } from 'lucide-react'
+import { Layers, Info, Upload } from 'lucide-react'
 import PageLayout from '../components/PageLayout'
 import TabSwitcher from '../components/TabSwitcher'
-import UploadZone from '../components/UploadZone'
 import OutputPanel from '../components/OutputPanel'
 
-const ACCENT = '#ff3cac'
+const ACCENT = '#00ff87'
 
 const label = (text) => (
   <label style={{
@@ -16,24 +15,98 @@ const label = (text) => (
   }}>{text}</label>
 )
 
-export default function ImageToImage() {
+const FileUpload = ({ onFileSelect, selectedFile, id }) => (
+  <div style={{
+    border: `1px dashed ${selectedFile ? ACCENT : '#333'}`,
+    borderRadius: '6px', padding: '2rem', textAlign: 'center',
+    backgroundColor: '#0f0f0f', cursor: 'pointer', transition: 'all 0.2s',
+  }} onClick={() => document.getElementById(id).click()}>
+    <Upload size={24} color={selectedFile ? ACCENT : '#666'} style={{ margin: '0 auto 10px' }} />
+    <p style={{ fontFamily: "'Space Grotesk', sans-serif", color: selectedFile ? '#fff' : '#666', fontSize: '0.9rem' }}>
+      {selectedFile ? selectedFile.name : 'Click to upload an image (PNG, JPG)'}
+    </p>
+    <input
+      id={id} type="file" accept="image/png, image/jpeg"
+      style={{ display: 'none' }}
+      onChange={(e) => onFileSelect(e.target.files[0])}
+    />
+  </div>
+)
+
+export default function ImageInImage() {
   const [mode, setMode] = useState('encrypt')
-  const [carrierImg, setCarrierImg] = useState(null)
-  const [secretImg, setSecretImg] = useState(null)
-  const [stegoImg, setStegoImg] = useState(null)
-  const [output, setOutput] = useState('')
+  
+  // State for the three possible image uploads
+  const [coverImage, setCoverImage] = useState(null)
+  const [secretImage, setSecretImage] = useState(null)
+  const [stegoImage, setStegoImage] = useState(null)
+  
+  const [output, setOutput] = useState(null) 
   const [loading, setLoading] = useState(false)
 
-  const handleRun = () => {
-    setLoading(true); setOutput('')
-    setTimeout(() => { setOutput(null); setLoading(false) }, 1600)
+  const handleRun = async () => {
+    setLoading(true);
+    setOutput(null);
+
+    try {
+      if (mode === 'encrypt') {
+        if (!coverImage || !secretImage) {
+          setOutput({ type: 'text', content: '// Error: Please upload both a Cover Image and a Secret Image.'});
+          setLoading(false);
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('cover_image', coverImage);
+        formData.append('secret_image', secretImage);
+
+        const response = await fetch('http://127.0.0.1:5000/api/encode-img2img', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Encoding failed");
+
+        // The backend returns the merged stego image file
+        const blob = await response.blob();
+        const imageUrl = URL.createObjectURL(blob);
+        setOutput({ type: 'image', content: imageUrl });
+
+      } else {
+        if (!stegoImage) {
+          setOutput({ type: 'text', content: '// Error: Please upload a stego image to decode.'});
+          setLoading(false);
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('stego_image', stegoImage);
+
+        const response = await fetch('http://127.0.0.1:5000/api/decode-img2img', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Decoding failed");
+
+        // The backend returns the extracted secret image file
+        const blob = await response.blob();
+        const imageUrl = URL.createObjectURL(blob);
+        setOutput({ type: 'image', content: imageUrl });
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      setOutput({ type: 'text', content: "// Error: Could not connect to Python backend or process image." });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <PageLayout
       title="Image in Image"
-      subtitle="Conceal an entire secret image inside a carrier image by mixing bit planes. The output is visually indistinguishable from the carrier."
-      badge="Module 03 — Steganography"
+      subtitle="Hide an entire photograph inside another image by merging their Most Significant Bits (MSB)."
+      badge="Module 03 — Advanced Steganography"
       accentColor={ACCENT}
       icon={Layers}
     >
@@ -44,56 +117,20 @@ export default function ImageToImage() {
           <>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div>
-                {label('Carrier Image (the visible image)')}
-                <UploadZone accept=".png,.bmp" label="carrier image" onFile={setCarrierImg} file={carrierImg} accentColor={ACCENT} />
-                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', color: '#555', marginTop: '8px' }}>
-                  // This is what people see
-                </p>
+                {label('Cover Image (Public)')}
+                <FileUpload id="upload-cover" onFileSelect={setCoverImage} selectedFile={coverImage} />
               </div>
               <div>
-                {label('Secret Image (to hide inside carrier)')}
-                <UploadZone accept=".png,.bmp,.jpg" label="secret image" onFile={setSecretImg} file={secretImg} accentColor={ACCENT} />
-                <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', color: '#555', marginTop: '8px' }}>
-                  // This is hidden from view
-                </p>
+                {label('Secret Image (To Hide)')}
+                <FileUpload id="upload-secret" onFileSelect={setSecretImage} selectedFile={secretImage} />
               </div>
-            </div>
-
-            {/* Visual explanation */}
-            <div style={{
-              display: 'grid', gridTemplateColumns: '1fr 1fr 1fr',
-              gap: '1px', backgroundColor: '#141414',
-              border: '1px solid #141414', borderRadius: '6px', overflow: 'hidden',
-            }}>
-              {[
-                { label: 'Carrier MSBs', val: '4 bits', desc: 'Kept intact', color: ACCENT },
-                { label: 'Secret MSBs', val: '4 bits', desc: 'Extracted and mixed in', color: '#888' },
-                { label: 'Output LSBs', val: '4 bits', desc: 'Carries hidden image', color: ACCENT },
-              ].map(item => (
-                <div key={item.label} style={{ backgroundColor: '#0a0a0a', padding: '1rem 1.2rem' }}>
-                  <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', color: '#aaa', marginBottom: '4px' }}>{item.label}</p>
-                  <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.8rem', color: item.color, letterSpacing: '0.04em' }}>{item.val}</p>
-                  <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.82rem', color: '#ccc' }}>{item.desc}</p>
-                </div>
-              ))}
             </div>
           </>
         ) : (
           <>
-            <div style={{ maxWidth: '500px' }}>
-              {label('Stego Image (image containing hidden image)')}
-              <UploadZone accept=".png,.bmp" label="stego image" onFile={setStegoImg} file={stegoImg} accentColor={ACCENT} />
-            </div>
-            <div style={{
-              backgroundColor: '#0f0f0f', border: '1px solid #1a1a1a',
-              borderRadius: '6px', padding: '1rem 1.5rem',
-              fontFamily: "'JetBrains Mono', monospace",
-              fontSize: '0.82rem', color: '#aaa', lineHeight: 1.8,
-            }}>
-              <p>// What happens:</p>
-              <p>1. Read the 4 least significant bits from each pixel</p>
-              <p>2. Amplify (shift left by 4) to make them visible</p>
-              <p>3. Reconstruct and output the hidden image</p>
+            <div>
+              {label('Stego Image (upload to extract secret photo)')}
+              <FileUpload id="upload-stego" onFileSelect={setStegoImage} selectedFile={stegoImage} />
             </div>
           </>
         )}
@@ -110,14 +147,21 @@ export default function ImageToImage() {
             onMouseEnter={e => e.target.style.opacity = '0.85'}
             onMouseLeave={e => e.target.style.opacity = '1'}
           >
-            {mode === 'encrypt' ? 'Merge Images →' : 'Reveal Hidden Image →'}
+            {mode === 'encrypt' ? 'Merge Images →' : 'Extract Hidden Image →'}
           </button>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.68rem', color: '#2a2a2a' }}>
-            // Python API integration pending
-          </span>
         </div>
 
-        <OutputPanel output={output} type="image" loading={loading} accentColor={ACCENT} />
+        {output && output.type === 'text' && (
+           <OutputPanel output={output.content} type="text" loading={loading} accentColor={ACCENT} />
+        )}
+
+        {output && output.type === 'image' && (
+          <div style={{ marginTop: '1rem', padding: '1rem', border: '1px solid #1e1e1e', borderRadius: '6px', backgroundColor: '#0f0f0f' }}>
+             {label(mode === 'encrypt' ? 'Merged Stego Image (Right-click to Save)' : 'Extracted Secret Image (Right-click to Save)')}
+             <img src={output.content} alt="Output" style={{ maxWidth: '100%', height: 'auto', borderRadius: '4px' }} />
+          </div>
+        )}
+
       </div>
     </PageLayout>
   )
