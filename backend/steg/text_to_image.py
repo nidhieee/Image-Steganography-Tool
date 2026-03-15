@@ -1,6 +1,6 @@
 from PIL import Image
 import io
-
+# Least Significant Bit (LSB) Steganography, powered by the Python Pillow (PIL) library.
 # We need a clear stopping point for the decoder
 DELIMITER = "====END===="
 
