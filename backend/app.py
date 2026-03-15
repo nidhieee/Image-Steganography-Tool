@@ -74,7 +74,7 @@ def api_decode_image():
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
-
+    
 # ==========================================
 # IMAGE IN IMAGE ENDPOINTS
 # ==========================================
