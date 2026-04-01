@@ -112,10 +112,37 @@ def api_decode_img2img():
         return send_file(img_io, mimetype='image/png', as_attachment=True, download_name='stego_vault_extracted.png')
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# ==========================================
+# 4. TEXT IN GIF (EOF Injection)
+# ==========================================
+@app.route('/api/encode-gif', methods=['POST'])
+def api_encode_gif():
+    if 'cover_gif' not in request.files:
+        return jsonify({"error": "No GIF uploaded"}), 400
+        
+    file = request.files['cover_gif']
+    secret = request.form.get('secret_message', '')
+    
+    encoded_bytes = encode_text_in_gif(file, secret)
+    
+    img_io = io.BytesIO(encoded_bytes)
+    img_io.seek(0)
+    return send_file(img_io, mimetype='image/gif', as_attachment=True, download_name='stego_vault.gif')
+
+@app.route('/api/decode-gif', methods=['POST'])
+def api_decode_gif():
+    if 'stego_gif' not in request.files:
+        return jsonify({"error": "No GIF uploaded"}), 400
+        
+    file = request.files['stego_gif']
+    result = decode_text_from_gif(file)
+    return jsonify({"decoded_message": result})
 
 
 # ==========================================
 # SERVER EXECUTION (MUST BE AT THE BOTTOM)
 # ==========================================
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
