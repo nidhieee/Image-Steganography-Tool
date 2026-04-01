@@ -78,7 +78,7 @@ export default function TextInGif() {
         formData.append('cover_gif', coverGif);
         formData.append('secret_message', secretMsg);
 
-        const response = await fetch('http://127.0.0.1:5000/api/encode-gif', {
+        const response = await fetch('http://127.0.0.1:5050/api/encode-gif', {
           method: 'POST',
           body: formData
         });
@@ -100,7 +100,8 @@ export default function TextInGif() {
         const formData = new FormData();
         formData.append('stego_gif', stegoGif);
 
-        const response = await fetch('http://127.0.0.1:5000/api/decode-gif', {
+        // CHANGED: Fixed this port from 5000 to 5050
+        const response = await fetch('http://127.0.0.1:5050/api/decode-gif', {
           method: 'POST',
           body: formData
         });

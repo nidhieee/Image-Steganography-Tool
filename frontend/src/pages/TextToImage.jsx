@@ -80,7 +80,7 @@ export default function TextInImage() {
         formData.append('secret_message', secretMsg);
 
         // DO NOT set Content-Type header manually when using FormData! The browser does it.
-        const response = await fetch('http://127.0.0.1:5000/api/encode-image', {
+        const response = await fetch('http://127.0.0.1:5050/api/encode-image', {
           method: 'POST',
           body: formData
         });
@@ -104,7 +104,8 @@ export default function TextInImage() {
         const formData = new FormData();
         formData.append('stego_image', stegoImage);
 
-        const response = await fetch('http://127.0.0.1:5000/api/decode-image', {
+        // CHANGED: Fixed this port from 5000 to 5050
+        const response = await fetch('http://127.0.0.1:5050/api/decode-image', {
           method: 'POST',
           body: formData
         });

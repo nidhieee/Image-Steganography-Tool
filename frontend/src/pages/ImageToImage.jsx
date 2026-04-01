@@ -60,7 +60,7 @@ export default function ImageInImage() {
         formData.append('cover_image', coverImage);
         formData.append('secret_image', secretImage);
 
-        const response = await fetch('http://127.0.0.1:5000/api/encode-img2img', {
+        const response = await fetch('http://127.0.0.1:5050/api/encode-img2img', {
           method: 'POST',
           body: formData
         });
@@ -82,7 +82,7 @@ export default function ImageInImage() {
         const formData = new FormData();
         formData.append('stego_image', stegoImage);
 
-        const response = await fetch('http://127.0.0.1:5000/api/decode-img2img', {
+        const response = await fetch('http://127.0.0.1:5050/api/decode-img2img', {
           method: 'POST',
           body: formData
         });

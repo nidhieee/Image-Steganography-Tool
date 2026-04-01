@@ -63,8 +63,8 @@ export default function TextToText() {
 
     try {
       if (mode === 'encrypt') {
-        // Changed localhost to 127.0.0.1
-        const response = await fetch('http://127.0.0.1:5000/api/encode', {
+        // CHANGED: Port 5000 to 5050
+        const response = await fetch('http://127.0.0.1:5050/api/encode', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ cover_text: coverText, secret_message: secretMsg })
@@ -73,8 +73,8 @@ export default function TextToText() {
         const data = await response.json();
         setOutput(data.encoded_text || 'Error: Could not encode text.');
       } else {
-        // Changed localhost to 127.0.0.1
-        const response = await fetch('http://127.0.0.1:5000/api/decode', {
+        // CHANGED: Port 5000 to 5050
+        const response = await fetch('http://127.0.0.1:5050/api/decode', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ encoded_text: stegoInput })
@@ -85,7 +85,8 @@ export default function TextToText() {
       }
     } catch (error) {
       console.error("API Error:", error);
-      setOutput("// Error: Could not connect to Python backend. Make sure your Flask server is running on port 5000.");
+      // CHANGED: Updated the error message string to reflect the new port
+      setOutput("// Error: Could not connect to Python backend. Make sure your Flask server is running on port 5050.");
     } finally {
       setLoading(false);
     }
